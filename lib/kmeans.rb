@@ -36,10 +36,12 @@ module Kmeans
 
     def update(nodes)
       # TODO: Use .send() to allow passing of other distance calculations
+      puts"Updating cluster with #{nodes.length} nodes, currently there are #{@nodes.length}"
       @nodes = nodes
       old_centroid = @centroid
       @centroid = calculate_centroid()
-      haversine_distance(old_centroid, new_centroid)
+      centroid_shift = haversine_distance(old_centroid, @centroid)
+      return @centroid==old_centroid, centroid_shift
     end
 
     def calculate_centroid()
@@ -53,12 +55,7 @@ module Kmeans
       n = @nodes.length
       Node.new([total_lon/n, total_lat/n],@rng)
 
-    end
-    
-    def add_node(n)
-      @nodes << n
-    end
-
+    end  
   end
 
 
@@ -83,14 +80,17 @@ module Kmeans
       lists << []
     end
     
-    loop do
+    convergence_loops=0
+    loop do  #loop until k-means converged (TODO: implement OR MAX_ITERATIONS)
+      
+      lists.each{|l| l.clear} #remove elements from previous run      
+      
+      convergence_loops +=1
       index += 1
       
       points.each do |point|
         index_shortest=0
         smallest_distance=-1
-        #smallest_distance = haversine_distance(point, clusters[0].centroid)
-        #puts "Initial smallest distance from #{point} to centroid: #{clusters[0].centroid} #{smallest_distance}"
         cluster_index=0
         clusters.each do |cluster|
           distance = haversine_distance(point, cluster.centroid)
@@ -107,19 +107,28 @@ module Kmeans
       end
 
       biggest_shift = 0.0
-      clusters.each do |cluster|
-        shift = clusters # how much did the centroid move?
+      
+      for i in 0..(n-1)
+        cluster_i = clusters[i]
+        is_centroid_same, shift = cluster_i.update(lists[i]) #update the centroids
+        biggest_shift = shift if shift > biggest_shift # how much did the centroid move?   
       end
+      
+      #clusters.each do |cluster|
+      #  shift = clusters # how much did the centroid move?        
+      #end
       
       break if biggest_shift < cutoff
       
     end
-    c=0
-    lists.each{|l| 
-      puts "#### Nodes in cluster #{c}: #{l.length} ####"
-      c +=1
-      l.each{|n| puts "#{n.lon}" << " " << "#{n.lat}" }
-    } 
+    for i in 0..(n-1) 
+      l=lists[i]
+      puts "#### Nodes in cluster #{i}: #{l.length} ####"
+      #l.each{|n| puts "#{i} #{n.lon}" << " " << "#{n.lat}" }      
+    end
+      
+    puts "Loops required to converge: #{convergence_loops}"
+   
     return clusters
     
   end
