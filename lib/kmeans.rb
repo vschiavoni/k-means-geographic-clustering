@@ -14,8 +14,8 @@ module Kmeans
         raise Exception.new('Coordinates not provided to Node')
       end
 
-      @lon ||= lon
-      @lat ||= lat
+      @lon ||= lon.to_f
+      @lat ||= lat.to_f
 
     end
 
