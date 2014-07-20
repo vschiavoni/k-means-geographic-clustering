@@ -79,7 +79,7 @@ module Kmeans
     index = 0
     
     lists = []
-    for i in 0..n #one list per cluster?
+    for i in 1..n #one list per cluster?
       lists << []
     end
     
