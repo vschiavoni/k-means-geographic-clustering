@@ -14,8 +14,8 @@ module Kmeans
         raise Exception.new('Coordinates not provided to Node')
       end
       #Add some noise to the coordinates, the GeoIP service has a low-resolution, many duplicates
-      @lon ||= lon.to_f + (Random.rand(0.00000000001..0.0000009)*[-1,1].sample(random:rng)) 
-      @lat ||= lat.to_f + (Random.rand(0.00000000001..0.0000009)*[-1,1].sample(random:rng))
+      @lon ||= lon.to_f + (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng)) 
+      @lat ||= lat.to_f + (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng))
 
     end
 
@@ -116,8 +116,9 @@ module Kmeans
     end
     c=0
     lists.each{|l| 
-      puts "Nodes in cluster #{c}: #{l.length}"
+      puts "#### Nodes in cluster #{c}: #{l.length} ####"
       c +=1
+      l.each{|n| puts "#{n.lon}" << " " << "#{n.lat}" }
     } 
     return clusters
     
