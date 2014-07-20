@@ -2,7 +2,9 @@ require_relative 'geometric'
 
 module Kmeans
   # TODO: Error and validity checks for objects
-
+  
+  MAX_ITERATIONS = 10
+  
   class Node
 
     attr_accessor :lat, :lon
@@ -36,7 +38,7 @@ module Kmeans
 
     def update(nodes)
       # TODO: Use .send() to allow passing of other distance calculations
-      puts"Updating cluster with #{nodes.length} nodes, currently there are #{@nodes.length}"
+      #puts"Updating cluster with #{nodes.length} nodes, currently there are #{@nodes.length}"
       @nodes = nodes
       old_centroid = @centroid
       @centroid = calculate_centroid()
@@ -110,16 +112,12 @@ module Kmeans
       
       for i in 0..(n-1)
         cluster_i = clusters[i]
-        is_centroid_same, shift = cluster_i.update(lists[i]) #update the centroids
-        biggest_shift = shift if shift > biggest_shift # how much did the centroid move?   
+        is_centroid_same, shift = cluster_i.update(lists[i]) #update the centroids and check if it moved
+        if not is_centroid_same then
+          biggest_shift = shift if shift > biggest_shift # how much did the centroid move?   
+        end
       end
-      
-      #clusters.each do |cluster|
-      #  shift = clusters # how much did the centroid move?        
-      #end
-      
-      break if biggest_shift < cutoff
-      
+      break if biggest_shift < cutoff or (convergence_loops >= MAX_ITERATIONS)      
     end
     for i in 0..(n-1) 
       l=lists[i]
@@ -127,7 +125,7 @@ module Kmeans
       #l.each{|n| puts "#{i} #{n.lon}" << " " << "#{n.lat}" }      
     end
       
-    puts "Loops required to converge: #{convergence_loops}"
+    puts "Loops required to converge: #{convergence_loops} (MAX:#{MAX_ITERATIONS})"
    
     return clusters
     
