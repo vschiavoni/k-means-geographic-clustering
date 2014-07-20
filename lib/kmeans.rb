@@ -31,7 +31,7 @@ module Kmeans
       if not nodes
         raise Exception.new('Nodes not provided to Cluster')
       end
-      @nodes ||= nodes
+      @nodes = nodes
       @rng = rng
       @centroid = calculate_centroid()
     end
