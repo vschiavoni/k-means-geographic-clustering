@@ -31,6 +31,9 @@ module Kmeans
       if not nodes
         raise Exception.new('Nodes not provided to Cluster')
       end
+      if nodes.length <1 
+        raise Exception.new('Cannot initiliaze cluster with empty list of nodes')
+      end
       @nodes = nodes
       @rng = rng
       @centroid = calculate_centroid()
