@@ -3,7 +3,7 @@ require_relative 'geometric'
 module Kmeans
   # TODO: Error and validity checks for objects
   
-  MAX_ITERATIONS = 10
+  MAX_ITERATIONS = 100
   
   class Node
 
@@ -16,8 +16,8 @@ module Kmeans
         raise Exception.new('Coordinates not provided to Node')
       end
       #Add some noise to the coordinates, the GeoIP service has a low-resolution, many duplicates
-      @lon ||= lon.to_f + (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng)) 
-      @lat ||= lat.to_f + (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng))
+      @lon ||= lon.to_f #+ (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng)) 
+      @lat ||= lat.to_f #+ (Random.rand(0.0000000000001..0.0000009)*[-1,1].sample(random:rng))
 
     end
 
