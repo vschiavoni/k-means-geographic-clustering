@@ -122,13 +122,18 @@ module Kmeans
       end
       break if biggest_shift < cutoff or (convergence_loops >= MAX_ITERATIONS)      
     end
+    
+    puts "clusters={}"
     for i in 0..(n-1) 
       l=lists[i]
-      puts "#### Nodes in cluster #{i}: #{l.length} ####"
-      #l.each{|n| puts "#{i} #{n.lon}" << " " << "#{n.lat}" }      
+      lindex=i+1
+      puts "clusters[#{lindex}]={}" #start at 1 to make it more Lua-friendly
+      puts "--[[#### Nodes in cluster #{i}: #{l.length} ####]]"
+      #l.each{|n| puts "#{i} #{n.lon}" << " " << "#{n.lat}" }
+      l.each{|n|  puts "table.insert(clusters[#{lindex}],{#{n.lon},#{n.lat}})" }
     end
       
-    puts "Loops required to converge: #{convergence_loops} (MAX:#{MAX_ITERATIONS})"
+    puts "--Loops required to converge: #{convergence_loops} (MAX:#{MAX_ITERATIONS})"
    
     return clusters
     
