@@ -13,10 +13,10 @@ CSV.foreach("it-2004.sites.gpscoords.csv") do |row|
     points << node
 end
 k=ARGV[0].to_i or 4
-puts "KMeans, k=#{k}"
+puts "--KMeans, k=#{k}"
 clusters = Kmeans::cluster(points,k,rng)
 #p clusters
-puts "#{clusters.length} clusters created successfully."
+puts "--#{clusters.length} clusters created successfully."
 
 #clusters.each {|c| 
 #  c.nodes.each{|n| puts n}
